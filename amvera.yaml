@@ -1,0 +1,8 @@
+meta:
+  environment: python
+  toolName: pip
+build:
+  requirementsPath: requirements.txt
+run:
+  scriptName: run.py
+  persistenceMount: /data
