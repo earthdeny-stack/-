@@ -1,3 +1,4 @@
+import os
 import asyncio
 import logging
 import uvicorn
@@ -9,7 +10,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(na
 logger = logging.getLogger("MasterRunner")
 
 async def run_fastapi_server():
-    config = uvicorn.Config(app, host="0.0.0.0", port=8000, log_level="info")
+    # Amvera Cloud Envoy expects application to listen on Port 80
+    port = int(os.getenv("PORT", 80))
+    logger.info(f"🌐 Запуск FastAPI сервера на 0.0.0.0:{port}...")
+    config = uvicorn.Config(app, host="0.0.0.0", port=port, log_level="info")
     server = uvicorn.Server(config)
     await server.serve()
 

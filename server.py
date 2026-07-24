@@ -1,4 +1,5 @@
 import os
+import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
@@ -7,6 +8,7 @@ from proxy_checker import load_proxies_db, save_proxies_db, MTProtoProxyChecker
 
 app = FastAPI(title="Telegram Proxy - @Rage_Kill API", version="3.0.0")
 
+# Enable CORS for Vercel & Telegram Mini Apps
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -60,7 +62,7 @@ async def admin_delete_proxy(request: Request):
     save_proxies_db(updated)
     return {"status": "ok"}
 
-# Serve WebApp static files (from root or webapp/ subfolder)
+# Serve WebApp static files
 root_dir = os.path.dirname(__file__)
 webapp_dir = os.path.join(root_dir, "webapp")
 static_dir = webapp_dir if os.path.exists(os.path.join(webapp_dir, "index.html")) else root_dir
@@ -68,5 +70,6 @@ static_dir = webapp_dir if os.path.exists(os.path.join(webapp_dir, "index.html")
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static_frontend")
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
+    # On Amvera Cloud, containers route HTTP traffic through port 80 or PORT env var
+    port = int(os.getenv("PORT", 80))
+    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
