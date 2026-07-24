@@ -1,8 +1,14 @@
 # Список Telegram-каналов для авто-паблишинга и парсинга MTProto прокси
 # Указывайте по одному юзернейму или ссылке на строку
 
-@Rage_Kill
 @ProxyChannel1
 @MTProto_List
 @TG_Fast_Proxies
 https://t.me/public_mtproto_share
+https://t.me/mtp4tg
+https://t.me/telega_proxies
+https://t.me/tgmtproxylol
+https://t.me/MProxyFree
+https://t.me/TProxyRU
+https://t.me/ProxyFree_Ru
+https://t.me/ProxyMTProto
