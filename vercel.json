@@ -3,7 +3,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://YOUR_AMVERA_APP_NAME.amvera.io/api/$1"
+      "dest": "https://proxy-deplrh.waw0.amvera.tech/"
     },
     {
       "src": "/(.*)",
