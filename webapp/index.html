@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Telegram Proxy - @Rage_Kill</title>
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Native Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Live Animated Interactive Canvas Background (Global Proxy Node Network) -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Top Sticky Header Navigation Bar -->
+  <header class="header-bar">
+    <div class="header-content">
+      
+      <!-- Left Header Title -->
+      <div class="header-pill">
+        <span>Telegram Proxy</span>
+      </div>
+
+      <!-- Right Channel Badge (Clickable Link) -->
+      <a href="https://t.me/Rage_Kill" target="_blank" class="header-pill">
+        @Rage_Kill
+      </a>
+
+    </div>
+  </header>
+
+  <!-- Main Application Area -->
+  <main class="container">
+
+    <!-- WINDOW 1: MAIN PROXIES LIST VIEW -->
+    <section id="windowProxies" class="view-window active">
+      
+      <!-- Hero Banner & Platform Info Wrapper -->
+      <div class="hero-wrapper">
+        <div class="hero-banner">
+          <h1 class="hero-title">Telegram Proxy - <a href="https://t.me/Rage_Kill" target="_blank" class="sponsor-link">@Rage_Kill</a></h1>
+          <p class="hero-subtitle">Мониторинг задержки (ping) и доступ к стабильным MTProto серверам</p>
+          
+          <div class="hero-tags-row">
+            <div class="hero-tag">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span>АВТОМАТИЧЕСКАЯ ПРОВЕРКА 24/7</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-card-title">Платформа Telegram</div>
+          <div id="platformCardVal" class="platform-card-val">Loading...</div>
+          <p style="font-size: 11px; color: #64748b; margin-top: 6px;">
+            Автоматическая адаптация интерфейса под клиент
+          </p>
+        </div>
+      </div>
+
+      <!-- Search Container -->
+      <div class="search-container">
+        <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Ищи прокси, страны, IP и теги">
+        <button id="clearSearch" onclick="app.clearSearch()" class="clear-search-btn hidden">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Integrated Category Filter Pills -->
+      <div class="pills-row">
+        <button data-filter="all" class="filter-btn active">Все</button>
+        
+        <button data-filter="ping" class="filter-btn">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#f59e0b;"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path></svg>
+          По пингу
+        </button>
+
+        <button data-filter="uptime" class="filter-btn">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#10b981;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          По аптайму
+        </button>
+
+        <button data-filter="tls" class="filter-btn">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#c084fc;"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path></svg>
+          Fake / TLS
+        </button>
+      </div>
+
+      <!-- Clean Section Title -->
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-title">Список рабочих прокси</span>
+          <span id="countBadge" class="count-badge">5</span>
+        </div>
+      </div>
+
+      <!-- Proxy Cards Grid Container -->
+      <div id="proxyList" class="proxy-grid">
+        <!-- Dynamic Cards -->
+      </div>
+
+    </section>
+
+    <!-- WINDOW 2: FAVORITES VIEW -->
+    <section id="windowFavorites" class="view-window">
+      
+      <div class="hero-banner" style="margin-top: 14px; margin-bottom: 16px;">
+        <h2 class="hero-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"></path></svg>
+          Избранные прокси
+        </h2>
+        <p class="hero-subtitle">Сохраненные сервера с минимальным пингом для быстрого доступа</p>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-title">Ваши закладки</span>
+          <span id="favCountBadge" class="count-badge">0</span>
+        </div>
+      </div>
+
+      <!-- Favorites Grid Container -->
+      <div id="favList" class="proxy-grid">
+        <!-- Dynamic Favorite Proxy Cards -->
+      </div>
+
+    </section>
+
+    <!-- WINDOW 3: SETTINGS VIEW -->
+    <section id="windowSettings" class="view-window">
+      
+      <div class="hero-banner" style="margin-top: 14px; margin-bottom: 16px;">
+        <h2 class="hero-title" style="display: flex; align-items: center; gap: 6px;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Настройки
+        </h2>
+        <p class="hero-subtitle">Конфигурация Mini App и аварийный роутер прокси</p>
+      </div>
+
+      <div class="settings-section">
+        
+        <!-- Emergency Fallback Proxy Setting Card -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon" style="color: #10b981; border-color: rgba(16, 185, 129, 0.25);">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <div>
+              <div class="setting-title" style="display: flex; align-items: center; gap: 6px;">
+                <span>Экстренный Авто-Прокси</span>
+                <span class="count-badge" style="background: rgba(16,185,129,0.15); color: #10b981; font-size: 9px;">AUTO</span>
+              </div>
+              <div class="setting-desc">Бот пришлет лучший рабочий прокси при падении соединения</div>
+            </div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="emergencyProxyToggle" checked onchange="app.toggleEmergencyProxy(this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Official Channel Setting Card -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+            </div>
+            <div>
+              <div class="setting-title">Официальный Канал</div>
+              <div class="setting-desc"><a href="https://t.me/Rage_Kill" target="_blank" class="sponsor-link">@Rage_Kill</a> — обновления и прокси</div>
+            </div>
+          </div>
+          <a href="https://t.me/Rage_Kill" target="_blank" class="btn-open-channel">Открыть</a>
+        </div>
+
+        <!-- Auto-Refresh Interval -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            </div>
+            <div>
+              <div class="setting-title">Авто-обновление списков</div>
+              <div class="setting-desc">Автоматически запрашивать свежий пинг</div>
+            </div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked onchange="app.showToast('Настройки авто-обновления сохранены')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Auto-Filter Slow Proxies -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <div>
+              <div class="setting-title">Фильтр медленных серверов</div>
+              <div class="setting-desc">Удалять из выдачи серверы > 500 ms</div>
+            </div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked onchange="app.showToast('Фильтр медленных серверов активен')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Clear Favorites Cache Button -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon" style="color: #ef4444;">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </div>
+            <div>
+              <div class="setting-title">Очистить кэш</div>
+              <div class="setting-desc">Сбросить сохраненные закладки</div>
+            </div>
+          </div>
+          <button onclick="app.clearFavoritesCache()" class="btn-copy" style="color: #ef4444;">Очистить</button>
+        </div>
+
+        <!-- Admin Panel Access Status Button (if unlocked) -->
+        <div id="adminPanelLink" class="setting-card hidden border-amber-500/30">
+          <div class="setting-info">
+            <div class="setting-icon" style="color: #f59e0b;">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <div>
+              <div class="setting-title">Панель Администратора</div>
+              <div class="setting-desc">Раздел управления системой разблокирован</div>
+            </div>
+          </div>
+          <button onclick="app.switchWindow('admin')" class="btn-open-channel" style="background:#f59e0b; color:#000000;">Панель</button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- WINDOW 4: ADMIN DASHBOARD WINDOW -->
+    <section id="windowAdmin" class="view-window">
+      
+      <div class="hero-banner" style="margin-top: 14px; margin-bottom: 16px; border-color: rgba(245, 158, 11, 0.3);">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 class="hero-title" style="color: #f59e0b; display: flex; align-items: center; gap: 6px;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            Админ-Панель Управления
+          </h2>
+          <button onclick="app.logoutAdmin()" class="btn-copy" style="font-size:10px; color:#ef4444; padding:4px 8px;">Выйти</button>
+        </div>
+        <p class="hero-subtitle">Добавление прокси, управление пользователями и настройки подписки</p>
+      </div>
+
+      <!-- Add Proxy Form -->
+      <div class="setting-card" style="flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 16px;">
+        <div class="setting-title" style="color: #ffffff; display: flex; align-items: center; gap: 6px;">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          Добавить новый MTProto Прокси
+        </div>
+        <input type="text" id="adminProxyInput" class="search-input" style="padding-left:14px;" placeholder="tg://proxy?server=...&port=443&secret=...">
+        <button onclick="app.adminAddProxy()" class="btn-verify" style="margin-bottom:0; background: #f59e0b; color: #000000;">
+          Добавить и проверить пинг
+        </button>
+      </div>
+
+      <!-- Toggle Subscription Gate in Admin Settings -->
+      <div class="setting-card" style="margin-bottom: 16px;">
+        <div class="setting-info">
+          <div class="setting-icon" style="color: #38bdf8;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          </div>
+          <div>
+            <div class="setting-title">Принудительная подписка на канал</div>
+            <div class="setting-desc">Окно запроса подписки и её проверка</div>
+          </div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="adminSubToggle" checked onchange="app.toggleAdminSubRequirement(this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Quick Action Button -->
+      <div class="settings-section" style="margin-top: 0; margin-bottom: 16px;">
+        <div class="setting-card">
+          <div>
+            <div class="setting-title" style="display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#f59e0b;"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path></svg>
+              Принудительный Re-Ping серверов
+            </div>
+            <div class="setting-desc">Запустить асинхронную проверку базы</div>
+          </div>
+          <button onclick="app.adminRePingAll()" class="btn-open-channel">Запустить</button>
+        </div>
+      </div>
+
+      <!-- SPOILER 1: Active Servers List -->
+      <details class="admin-spoiler" open>
+        <summary class="admin-spoiler-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg class="spoiler-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"></path></svg>
+            <span>Список серверов в базе</span>
+          </div>
+          <span id="adminCountBadge" class="count-badge">0</span>
+        </summary>
+        <div id="adminProxyList" class="proxy-grid" style="padding-top: 14px;">
+          <!-- Dynamic Proxy Cards for Admin -->
+        </div>
+      </details>
+
+      <!-- SPOILER 2: Active Subscribed Users List -->
+      <details class="admin-spoiler">
+        <summary class="admin-spoiler-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg class="spoiler-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <span>Активные подписанные пользователи</span>
+          </div>
+          <span id="adminUsersCountBadge" class="count-badge">4</span>
+        </summary>
+        <div id="adminUsersList" class="proxy-grid" style="padding-top: 14px;">
+          <!-- Dynamic User Cards -->
+        </div>
+      </details>
+
+      <!-- SPOILER 3: Blocked Users List -->
+      <details class="admin-spoiler">
+        <summary class="admin-spoiler-header">
+          <div style="display: flex; align-items: center; gap: 8px; color: #ef4444;">
+            <svg class="spoiler-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+            <span>Заблокированные пользователи</span>
+          </div>
+          <span id="adminBlockedCountBadge" class="count-badge" style="color:#ef4444;">0</span>
+        </summary>
+        <div id="adminBlockedList" class="proxy-grid" style="padding-top: 14px;">
+          <!-- Dynamic Blocked User Cards -->
+        </div>
+      </details>
+
+      <!-- SPOILER 4: TEST / DEBUG Tools -->
+      <details class="admin-spoiler">
+        <summary class="admin-spoiler-header">
+          <div style="display: flex; align-items: center; gap: 8px; color: #a855f7;">
+            <svg class="spoiler-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            <span>TEST / DEBUG Аварийные функции</span>
+          </div>
+          <span class="count-badge" style="color:#a855f7;">3</span>
+        </summary>
+        <div class="settings-section" style="margin-top: 0; padding-top: 14px;">
+          
+          <div class="setting-card">
+            <div>
+              <div class="setting-title">🚨 Тест отправки аварийной ссылки</div>
+              <div class="setting-desc">Симуляция отправки резервного прокси ботом</div>
+            </div>
+            <button onclick="app.debugTriggerEmergencyProxy()" class="btn-open-channel" style="background:#a855f7; color:#ffffff;">Тест</button>
+          </div>
+
+          <div class="setting-card">
+            <div>
+              <div class="setting-title">💥 Симуляция падения прокси</div>
+              <div class="setting-desc">Проверка мгновенного переключения серверов</div>
+            </div>
+            <button onclick="app.debugSimulateServerCrash()" class="btn-copy">Симуляция</button>
+          </div>
+
+          <div class="setting-card">
+            <div>
+              <div class="setting-title">📡 Диагностика задержки ботов</div>
+              <div class="setting-desc">Запрос времени отклика бота и API</div>
+            </div>
+            <button onclick="app.debugCheckBotLatency()" class="btn-copy">Логи</button>
+          </div>
+
+        </div>
+      </details>
+
+    </section>
+
+  </main>
+
+  <!-- Floating Bottom Navigation Dock -->
+  <nav class="bottom-dock">
+    
+    <!-- Tab 1: Proxies View -->
+    <button onclick="app.switchWindow('proxies')" id="dockTabProxies" class="dock-item active">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      <span>Прокси</span>
+    </button>
+
+    <!-- Tab 2: Favorites View (Bookmark Ribbon SVG) -->
+    <button onclick="app.switchWindow('favorites')" id="dockTabFavorites" class="dock-item">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"></path></svg>
+      <span>Избранное</span>
+    </button>
+
+    <!-- Tab 3: Settings View -->
+    <button onclick="app.switchWindow('settings')" id="dockTabSettings" class="dock-item">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+      <span>Настройки</span>
+    </button>
+
+  </nav>
+
+  <!-- SEND BOT MESSAGE TO USER MODAL -->
+  <div id="sendMessageModal" class="sub-overlay hidden">
+    <div class="sub-card animate-fade-in-up">
+      <div class="sub-icon-wrap" style="color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+      </div>
+
+      <h2 class="sub-channel-title">Написать пользователю</h2>
+      <p id="sendMsgRecipient" class="sub-instruction" style="margin-bottom: 14px; text-transform:none; color:#38bdf8; font-weight:700;">
+        Кому: Алексей Смирнов (@alex_smirnov)
+      </p>
+
+      <div class="search-container" style="margin-bottom: 16px;">
+        <textarea id="sendMessageInput" class="search-input" style="padding-left:14px; height: 100px; resize:none;" placeholder="Введите сообщение от имени бота..."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button onclick="app.closeSendMessageModal()" class="btn-copy" style="flex:1; justify-content:center;">Отмена</button>
+        <button onclick="app.sendBotMessage()" class="btn-verify" style="flex:1; margin-bottom:0; background:#38bdf8; color:#000000;">Отправить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECRET ADMIN PASSWORD MODAL -->
+  <div id="adminPassModal" class="sub-overlay hidden">
+    <div class="sub-card animate-fade-in-up">
+      <div class="sub-icon-wrap" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.3);">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+      </div>
+
+      <h2 class="sub-channel-title">Панель Администратора</h2>
+      <p class="sub-instruction" style="margin-bottom: 16px;">Введите пароль доступа:</p>
+
+      <div class="search-container" style="margin-bottom: 16px;">
+        <input type="password" id="adminPassInput" class="search-input" style="padding-left: 14px;" placeholder="Введите пароль...">
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button onclick="app.closeAdminPassModal()" class="btn-copy" style="flex:1; justify-content:center;">Отмена</button>
+        <button onclick="app.verifyAdminPassword()" class="btn-verify" style="flex:1; margin-bottom:0; background:#f59e0b; color:#000000;">Войти</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mandatory Subscription Gate Modal Screen -->
+  <div id="subModal" class="sub-overlay">
+    <div class="sub-card animate-fade-in-up">
+      <div class="sub-icon-wrap">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+      </div>
+
+      <p class="sub-instruction">Для использования необходимо подписаться на:</p>
+      <h2 class="sub-channel-title">èkb</h2>
+
+      <div class="channel-box">
+        <div class="channel-box-left">
+          <div class="channel-avatar-ekb">È</div>
+          <div class="channel-box-info">
+            <div class="channel-name">èkb</div>
+            <a href="https://t.me/Rage_Kill" target="_blank" class="channel-link">https://t.me/Rage_Kill</a>
+          </div>
+        </div>
+        <a href="https://t.me/Rage_Kill" target="_blank" class="btn-open-channel">Перейти</a>
+      </div>
+
+      <button id="verifySubBtn" onclick="app.verifySubscription()" class="btn-verify">
+        <span id="verifyBtnText">Проверить подписку</span>
+      </button>
+
+      <p class="sub-note">После подписки нажмите кнопку выше для доступа к функционалу.</p>
+    </div>
+  </div>
+
+  <!-- Toast Notification Bar -->
+  <div id="toast" class="toast-bar hidden animate-fade-in-up">
+    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#10b981;">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <span id="toastMsg">Сообщение</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+</html>
